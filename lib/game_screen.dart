@@ -23,6 +23,8 @@ class _gameScreen extends State<GameScreen> with TickerProviderStateMixin {
   late var x;
   late var y;
 
+  var provider;
+
   @override
   void initState() {
     _controller = AnimationController(
@@ -31,7 +33,6 @@ class _gameScreen extends State<GameScreen> with TickerProviderStateMixin {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var provider = Provider.of<ViewModel>(context, listen: false);
       provider.createGraph();
     });
 
@@ -40,10 +41,9 @@ class _gameScreen extends State<GameScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<ViewModel>(context);
+    provider = Provider.of<ViewModel>(context);
     var N = provider.N;
     var X = provider.X;
-    print("11111111");
     var twoDList = provider.list;
 
     var userWidgetSize = 40;
@@ -59,9 +59,6 @@ class _gameScreen extends State<GameScreen> with TickerProviderStateMixin {
       var y = 0.0;
 
       var h = (height - userWidgetSize) / X;
-
-      print("!!!twoDList $i ${provider.twoDList[i]}");
-      print("!!!roadList $i ${provider.roadList[i]}");
 
       _animation = TweenSequence(
         <TweenSequenceItem<Offset>>[
@@ -81,25 +78,19 @@ class _gameScreen extends State<GameScreen> with TickerProviderStateMixin {
       animationList.add(_animation);
     }
 
-   /* var bottom = 170;*/
-
     provider.animationController = _controller;
 
     return Container(
       color: Colors.white,
-      //wrap CustomPaint with CanvasTouchDetector
       child: Stack(
         children: [
           CustomPaint(
             size: Size(
-                MediaQuery.sizeOf(context).width,
-                MediaQuery.sizeOf(context).height,),
-              //  100.w,
-               // 100.h /*- bottom*/),
+              MediaQuery.sizeOf(context).width,
+              MediaQuery.sizeOf(context).height,
+            ),
             painter: GamePainter(X, N, twoDList, height),
-            // foregroundPainter: UserPainter(X, N, twoDList, listenable: _animation2),
           ),
-
           for (var j = 0; j < N; j++) ...[
             Positioned(
               left: width * (j + 1) - width / 2 - (userWidgetSize / 2),
@@ -113,10 +104,7 @@ class _gameScreen extends State<GameScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            // ),
           ]
-
-
         ],
       ),
     );
@@ -127,7 +115,6 @@ class GamePainter extends CustomPainter {
   int X = 0;
   var list;
 
-//  late int N = list.length;
   var N;
 
   var height;
@@ -141,20 +128,13 @@ class GamePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     cnt++;
 
-    // Paint 클래스는 어떤식으로 화면을 그릴지 정할 때 사용한다.
     Paint paint = Paint()
-      // 색은 주황색
       ..color = LADDER_COLOR
-      // 선의 끝은 각지게 표현
       ..strokeCap = StrokeCap.square
-      // 선의 굵기는 8.0
       ..strokeWidth = 8.0;
 
-    // 선을 그리지 위한 좌표값
     var width = size.width / N;
     var widthx = size.width / X;
-
-    print(' X $X   N $N');
 
     var h = (height - topMargin) / X;
 
@@ -177,7 +157,6 @@ class GamePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant GamePainter data) {
-    print("shouldREpaint  ${data.list}");
     return false;
   }
 }

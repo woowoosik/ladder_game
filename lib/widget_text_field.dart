@@ -3,24 +3,20 @@ import 'package:flutter/material.dart';
 
 import 'color.dart';
 
-
-
 typedef Callback = void Function(String);
 
-class TextFieldWidget extends StatelessWidget{
-
+class TextFieldWidget extends StatelessWidget {
   String hint;
 
   bool password;
 
   Callback callback;
 
-  TextFieldWidget({
-    super.key,
-    required this.password,
-    required this.hint,
-    required this.callback
-  });
+  TextFieldWidget(
+      {super.key,
+      required this.password,
+      required this.hint,
+      required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +36,16 @@ class TextFieldWidget extends StatelessWidget{
         style: const TextStyle(fontSize: 17.0, color: Colors.black54),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(10.0),
-          hintText: hint ,
+          hintText: hint,
           border: InputBorder.none,
           hintStyle: TextStyle(color: Colors.black26),
         ),
-        obscureText: password? true : false,
+        obscureText: password ? true : false,
         keyboardType: TextInputType.text,
-       // onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-        onChanged: (val){
+        // onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+        onChanged: (val) {
           callback.call(val);
         },
-
       ),
     );
   }

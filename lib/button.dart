@@ -20,7 +20,6 @@ class Button extends StatefulWidget {
 class _Button extends State<Button> {
   @override
   Widget build(BuildContext context) {
-    print("@@@@@@@@@@@@@ button @@@@@@@@@@@@@");
     var provider = Provider.of<ViewModel>(context);
     return Column(
       children: [
@@ -36,7 +35,6 @@ class _Button extends State<Button> {
                   );
                 } else {
                   provider.add();
-                 // provider.createGoalTextList();
                 }
               },
               child: const Icon(Icons.add),
@@ -56,7 +54,6 @@ class _Button extends State<Button> {
                   );
                 } else {
                   provider.remove();
-                  //provider.createGoalTextList();
                 }
               },
               child: const Icon(Icons.remove),

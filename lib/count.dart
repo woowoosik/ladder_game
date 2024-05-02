@@ -19,7 +19,6 @@ class _Count extends State<Count>{
   @override
   Widget build(BuildContext context) {
 
-    print("@@@@@@@@@@@@@ _Count @@@@@@@@@@@@@");
     return SafeArea(
       child:Text(
         '${context.watch<ViewModel>().N.toString()} 명',

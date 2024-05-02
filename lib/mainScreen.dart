@@ -30,7 +30,7 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
 
   late var provider;
 
- // var animationStart = false;
+  // var animationStart = false;
 
 /*
   double _keyboardHeight = 0;
@@ -44,25 +44,6 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
       vsync: this,
     );
 
-  /* WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      provider = Provider.of<ViewModel>(context, listen: false);
-      provider.createGoalTextList();
-    });*/
-
-
-
-    print("@@@@@@@@@@@@@@  @@@@@@@@@@@@@@ @@@@@@@@@@@@@@");
-    print("@@@@@@@@@@@@@@  @@@@@@@@@@@@@@ @@@@@@@@@@@@@@");
-    print("@@@@@@@@@@@@@@  @@@@@@@@@@@@@@ @@@@@@@@@@@@@@");
-    print("@@@@@@@@@@@@@@  initState  @@@@@@@@@@@@@@");
-    print("@@@@@@@@@@@@@@  @@@@@@@@@@@@@@ @@@@@@@@@@@@@@");
-    print("@@@@@@@@@@@@@@  @@@@@@@@@@@@@@ @@@@@@@@@@@@@@");
-    print("@@@@@@@@@@@@@@  @@@@@@@@@@@@@@ @@@@@@@@@@@@@@");
-
-
-
-
-
     super.initState();
   }
 
@@ -70,33 +51,14 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     provider = Provider.of<ViewModel>(context);
 
-    print("@@@@@@@@@@@@@@  main Screen ${provider.animationStart} @@@@@@@@@@@@@@");
-
-/*    if(provider.goalTextList == null){
-      print("@@@@@@@@@@@@@@ createGoalTextList null  @@@@@@@@@@@@@@");
-      provider.createGoalTextList();
-    }*/
-    if(provider.animationStart){
-     // provider.animationStart = false;
-      animation();
-
-    }
-/*
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if(provider.animationStart){
+      if (provider.animationStart) {
         animation();
-        provider.animationStart =false;
       }
     });
-*/
-
-   // var keyboardBottom = MediaQuery.of(context).viewInsets.bottom;
 
     var k = MediaQuery.viewInsetsOf(context).bottom;
 
-
-    print(" provider.goalTextList main Screen :  ${provider.goalTextList}");
     var n = 0;
     if (provider.N <= 4) {
       n = provider.N;
@@ -105,225 +67,142 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
     }
 
     return Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: SingleChildScrollView(
-            child: SafeArea(
-              child: Stack(
-                children: [
-                  GameScreen(),
-                  ValueListenableBuilder(
-                    valueListenable: restartBtn,
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(top: 30),
+            child: Stack(
+              children: [
+                GameScreen(),
+                ValueListenableBuilder(
+                  valueListenable: restartBtn,
+                  builder: (ctx, bool value, child) {
+                    return Visibility(
+                      visible: restartBtn.value,
+                      child: Container(
+                        height: MediaQuery.sizeOf(context).height,
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              restartBtn.value = false;
+                              visible.value = true;
+                              goalVisible.value = false;
+                              provider.createGraph();
+                              provider.createGoalTextList();
+                            });
+                          },
+                          child: Icon(Icons.restart_alt),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 0,
+                    vertical: 70 /*MediaQuery.sizeOf(context).width *0.1*/,
+                  ),
+                  child: ValueListenableBuilder(
+                    valueListenable: visible,
                     builder: (ctx, bool value, child) {
                       return Visibility(
-                        visible: restartBtn.value,
+                        visible: visible.value,
                         child: Container(
-                          height: MediaQuery.sizeOf(context).height,
-                          alignment: Alignment.center,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              print("다시하기 ");
-                              setState(() {
-                                restartBtn.value = false;
-                                visible.value = true;
-                                goalVisible.value = false;
-                                provider.createGraph();
-                                provider.createGoalTextList();
-                              });
-
-                            },
-                            child: Icon(Icons.restart_alt),
+                          color: BACKGOUND_COLOR_1,
+                          //color: Colors.white38,
+                          height: /*MediaQuery.of(context).size.height * 0.65,*/
+                              // 65.h,
+                              MediaQuery.sizeOf(context).height * 0.7,
+                          child: Column(
+                            children: [
+                              Count(),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Button(
+                                callback: () {
+                                  if (k > 0.0) {
+                                    provider.animationStart = true;
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  } else {
+                                    animation();
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              GoalInputText(),
+                            ],
                           ),
                         ),
                       );
                     },
                   ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 0, vertical: MediaQuery.sizeOf(context).width *0.2,),
-                    child: ValueListenableBuilder(
-                      valueListenable: visible,
-                      builder: (ctx, bool value, child) {
-                        return Visibility(
-                          visible: visible.value,
-                          child: Container(
-                            color: BACKGOUND_COLOR_1,
-                            // color: Colors.white38,
-                            height: /*MediaQuery.of(context).size.height * 0.65,*/
-                               // 65.h,
-                            MediaQuery.sizeOf(context).height*0.65,
-                            child: Column(
-                              children: [
-                                Count(),
-                                SizedBox(
-                                  height: 20,
-                                ),
-
-
-
-                                Button(
-                                  callback: () {
-                                    if(k > 0.0)
-                                    {
-                                      /// Keyboard is visible.
-
-                                      provider.animationStart = true;
-                                      print(" @@@@@@@@@@@@@@  ${provider.animationStart}  @@@@@@@@@@@@@@");
-                                      print(" @@@@@@@@@@@@@@  ${provider.goalTextList}  @@@@@@@@@@@@@@");
-                                      FocusScope.of(context).unfocus();
-
-                                      Future.delayed(const Duration(milliseconds: 500)).then((value) =>
-                                      {
-                                        animation()
-                                      });
-                                    }
-                                    else
-                                    {
-                                      animation();
-                                      /// Keyboard is not visible.
-
-                                    }
-
-                                    /*visible.value = false;
-
-
-                                    print(
-                                        " provider.goalTextList1 :  ${provider.goalTextList}");
-
-                                    provider.goalTextList =
-                                        provider.goalTextList..shuffle();
-
-                                    print(
-                                        " provider.goalTextList2 :  ${provider.goalTextList}");
-
-                                    goalVisible.value = true;
-
-                                    provider.animationController
-                                        .addStatusListener((status) {
-                                      if (status == AnimationStatus.dismissed) {
-                                        print(
-                                            " provider.goalTextList addStatusListener((status) :  ${provider.goalTextList}");
-                                      }
-                                    });
-
-                                    provider.animationController
-                                        .addStatusListener((status) {
-                                      if (status == AnimationStatus.completed) {
-                                        restartBtn.value = true;
-                                      }
-                                    });
-
-                                    if (provider
-                                        .animationController.isDismissed) {
-                                      print(
-                                          " provider.goalTextList3 forward :  ${provider.goalTextList}");
-                                      provider.animationController.forward();
-                                    } else if (provider
-                                        .animationController.isAnimating) {
-                                      provider.animationController.reverse();
-                                    } else {
-                                      provider.animationController.reset();
-                                    }*/
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                GoalInputText(),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  ValueListenableBuilder(
-                      valueListenable: goalVisible,
-                      builder: (ctx, bool value, child) {
-                        return Visibility(
-                          visible: goalVisible.value,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                  top: MediaQuery.sizeOf(context).height * 0.83),
-                                //top: 83.h),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                for (var i = 0; i < provider.N; i++) ...[
-                                  SingleChildScrollView(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      width: /*MediaQuery.of(context).size.width */
+                ),
+                ValueListenableBuilder(
+                    valueListenable: goalVisible,
+                    builder: (ctx, bool value, child) {
+                      return Visibility(
+                        visible: goalVisible.value,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.sizeOf(context).height * 0.83),
+                          //top: 83.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              for (var i = 0; i < provider.N; i++) ...[
+                                SingleChildScrollView(
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: /*MediaQuery.of(context).size.width */
                                         //  100.w / provider.N,
-                                          MediaQuery.sizeOf(context).width / provider.N ,
-                                      child: Text(
-                                        '${(provider.goalTextList[i])}',
-                                      ),
+                                        MediaQuery.sizeOf(context).width /
+                                            provider.N,
+                                    child: Text(
+                                      '${(provider.goalTextList[i])}',
                                     ),
                                   ),
-                                ]
-                              ],
-                            ),
+                                ),
+                              ]
+                            ],
                           ),
-                        );
-                      }),
-
-                     /* KeyboardVisibilityBuilder(
-                        builder: (context, isKeyboardVisible) {
-                          if(isKeyboardVisible){
-                            return SizedBox(height: 100.h*//* + _keyboardHeight*//*,);
-                          }else{
-                            return SizedBox(height: 100.h+40.h*//* + _keyboardHeight*//*,);
-                          }
-
-                        }
-                      ),*/
-                  SizedBox(height: MediaQuery.sizeOf(context).height*0.9  +k,)
-                ],
-              ),
+                        ),
+                      );
+                    }),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.9 + k,
+                )
+              ],
             ),
           ),
-
-          //)
-        );
+        ),
+      ),
+    );
   }
-  void animation(){
 
+  void animation() {
     visible.value = false;
-
-
     provider.goalTextList = provider.goalTextList..shuffle();
-
     goalVisible.value = true;
 
- /*   provider.animationController
-        .addStatusListener((status) {
-      if (status == AnimationStatus.dismissed) {
-        print(
-            " provider.goalTextList addStatusListener((status) :  ${provider.goalTextList}");
-      }
-    });*/
-
-    provider.animationController
-        .addStatusListener((status) {
+    provider.animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         provider.animationStart = false;
         restartBtn.value = true;
       }
     });
 
-    if (provider
-        .animationController.isDismissed) {
-      print(
-          " provider.goalTextList3 forward :  ${provider.goalTextList}");
+    if (provider.animationController.isDismissed) {
       provider.animationController.forward();
-    } else if (provider
-        .animationController.isAnimating) {
+    } else if (provider.animationController.isAnimating) {
       provider.animationController.reverse();
     } else {
       provider.animationController.reset();
     }
-
-
-
   }
 }
