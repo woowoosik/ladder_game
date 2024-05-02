@@ -1,18 +1,15 @@
-import 'dart:ffi';
+
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:ladder_game/goal_input_text.dart';
-import 'package:ladder_game/widget_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:ladder_game/viewmodel.dart';
 import 'package:ladder_game/button.dart';
 import 'package:ladder_game/game_screen.dart';
 import 'package:ladder_game/count.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 import 'color.dart';
 
 class mainScreen extends StatefulWidget {
@@ -29,13 +26,6 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
   ValueNotifier<bool> goalVisible = ValueNotifier<bool>(false);
 
   late var provider;
-
-  // var animationStart = false;
-
-/*
-  double _keyboardHeight = 0;
-  final KeyboardHeightPlugin _keyboardHeightPlugin = KeyboardHeightPlugin();
-*/
 
   @override
   void initState() {
@@ -100,9 +90,9 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
                   },
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 0,
-                    vertical: 70 /*MediaQuery.sizeOf(context).width *0.1*/,
+                    vertical: 70
                   ),
                   child: ValueListenableBuilder(
                     valueListenable: visible,
@@ -111,14 +101,11 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
                         visible: visible.value,
                         child: Container(
                           color: BACKGOUND_COLOR_1,
-                          //color: Colors.white38,
-                          height: /*MediaQuery.of(context).size.height * 0.65,*/
-                              // 65.h,
-                              MediaQuery.sizeOf(context).height * 0.7,
+                          height: MediaQuery.sizeOf(context).height * 0.7,
                           child: Column(
                             children: [
                               Count(),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               Button(
@@ -132,7 +119,7 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
                                   }
                                 },
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               GoalInputText(),
@@ -151,7 +138,6 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
                         child: Padding(
                           padding: EdgeInsets.only(
                               top: MediaQuery.sizeOf(context).height * 0.83),
-                          //top: 83.h),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -159,9 +145,7 @@ class _mainScreen extends State<mainScreen> with TickerProviderStateMixin {
                                 SingleChildScrollView(
                                   child: Container(
                                     alignment: Alignment.center,
-                                    width: /*MediaQuery.of(context).size.width */
-                                        //  100.w / provider.N,
-                                        MediaQuery.sizeOf(context).width /
+                                    width: MediaQuery.sizeOf(context).width /
                                             provider.N,
                                     child: Text(
                                       '${(provider.goalTextList[i])}',
