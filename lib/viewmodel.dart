@@ -57,7 +57,6 @@ class ViewModel extends ChangeNotifier {
       }
     } else {
       for (var i = 1; i < X; i++) {
-
         if (twoDList[2][i] != 0) {
           break;
         }
